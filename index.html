@@ -191,6 +191,26 @@
         </div>
         <div class="feature__panel">
           <h3>Écrire un message</h3>
+          <form name="contact" method="POST" data-netlify="true">
+            <p>
+              <label>Your Name: <input type="text" name="name" /></label>
+            </p>
+            <p>
+              <label>Your Email: <input type="email" name="email" /></label>
+            </p>
+            <p>
+              <label>Your Role: <select name="role[]" multiple>
+                <option value="leader">Leader</option>
+                <option value="follower">Follower</option>
+              </select></label>
+            </p>
+            <p>
+              <label>Message: <textarea name="message"></textarea></label>
+            </p>
+            <p>
+              <button type="submit">Send</button>
+            </p>
+          </form>
           <form id="form-contact" action="merci.html"  name="contact_home" method="POST" netlify>
             <div class="grid-2">
               <input name="nom" placeholder="Nom" required />
