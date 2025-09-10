@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Service Mobile — Vente & Réparation</title>
+  <meta name="description" content="Smart Service Mobile — Vente, achat et réparation de smartphones et produits informatiques. Prendre rendez-vous en ligne." />
+  <style>
+    :root {
+      --brand: #a8196f;
+      --ink: #151414;
+      --text: #f8f6f8;
+      --muted: #cfc8d2;
+      --card: #1b1a1a;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+      --hgap: clamp(16px, 4vw, 44px);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; scroll-behavior: smooth; margin:0; }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      color: var(--text);
+      background: var(--ink) url('https://images.openai.com/thumbnails/url/LZqLE3icu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw5K889ydsrw8zf0Mo2qKgwKciwoSC0McvM3SDSOD04Njy_OT7YM9Koq9CooLc9zrwxKTUrzsjQzdM6zDFQrBgAg5yoQ') no-repeat center center fixed;
+      background-size: cover;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Overlay sombre animé */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: -1;
+      animation: fadeIn 2.5s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1120px, 92vw); margin: 0 auto; }
+
+    .nav {
+      position: sticky; top: 0; z-index: 40; backdrop-filter: blur(8px);
+      background: rgba(0,0,0,.6);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .nav__bar { display: flex; align-items: center; justify-content: space-between; padding: 12px var(--hgap); }
+    .brand { display:flex; align-items:center; gap:12px; font-weight: 800; }
+    .brand__logo { width: 28px; height: 28px; border-radius: 8px; background:
+      conic-gradient(from 10deg, var(--brand), #ff3ea6 30%, var(--brand) 60%, #6c0f47 100%);
+      box-shadow: inset 0 0 18px rgba(255,255,255,.2), 0 6px 18px rgba(168,25,111,.35);
+    }
+
+    .nav__links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .nav__links a { padding:10px 14px; border-radius: 999px; font-weight: 600; font-size: 14px;
+      border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.04);
+      transition: 0.2s ease;
+    }
+    .nav__links a:hover { background: rgba(255,255,255,.15); }
+    .btn-primary { background: linear-gradient(135deg, var(--brand), #7c124f); color: white; border: none; }
+
+    .menu-toggle { display:none; background: var(--brand); border:none; color:white; padding:10px 14px; border-radius:8px; font-weight:700; cursor:pointer; }
+
+    @media (max-width: 768px) {
+      .nav__links { display: none; flex-direction: column; margin-top: 10px; }
+      .nav__links.open { display: flex; background: rgba(0,0,0,.8); padding:10px; border-radius:12px; }
+      .menu-toggle { display:block; }
+    }
+
+    section { position: relative; padding: clamp(70px, 12vh, 140px) 0; animation: fadeIn 3s ease forwards; opacity: 0; }
+    .eyebrow { color: var(--muted); font-weight: 700; text-transform: uppercase; font-size: 12px; animation-delay: 1s; }
+    .headline { font-size: clamp(28px, 5vw, 56px); font-weight: 900; line-height: 1.05; animation-delay: 1.5s; }
+    .lead { color: #e9e0ea; max-width: 70ch; font-size: clamp(16px, 2vw, 20px); animation-delay: 2s; }
+
+    footer { padding: 40px 0; color: #bfb6c1; font-size: 14px; text-align:center; background:rgba(0,0,0,.7); }
+  </style>
+</head>
+<body>
+  <header class="nav" role="banner">
+    <div class="nav__bar container">
+      <div class="brand">
+        <div class="brand__logo"></div>
+        <span>Smart Service <span style="color: var(--brand)">Mobile</span></span>
+      </div>
+      <button class="menu-toggle" aria-expanded="false">☰ Menu</button>
+      <nav class="nav__links" role="navigation">
+        <a href="#reparons">Nous réparons</a>
+        <a href="#achetons">Nous achetons</a>
+        <a href="#vendons">Nous vendons</a>
+        <a class="btn-primary" href="#rendezvous">Prendre rendez-vous</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="accueil">
+    <div class="container">
+      <p class="eyebrow">Vente • Achat • Réparation</p>
+      <h1 class="headline">Votre tech, <span style="color:var(--brand)">comme neuve</span></h1>
+      <p class="lead">Smart Service Mobile propose la réparation rapide de smartphones et ordinateurs, le remplacement de batterie, la réinstallation de systèmes, et la vente/achat de matériel.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>© <span id="year"></span> Smart Service Mobile · Vente & Réparation</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const toggle = document.querySelector('.menu-toggle');
+    const links = document.querySelector('.nav__links');
+    toggle.addEventListener('click', ()=>{
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', !expanded);
+      links.classList.toggle('open');
+    });
+  </script>
+</body>
+</html>

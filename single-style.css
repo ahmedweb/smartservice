@@ -1,0 +1,48 @@
+/* Style spécifique à la single page */
+.article-page {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  
+  .article-header h1 {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+  
+  .article-header .meta {
+    color: #777;
+    font-size: 0.9em;
+  }
+  
+  .article-content p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+  }
+  
+  figure {
+    margin: 20px 0;
+  }
+  
+  figure img {
+    max-width: 100%;
+    border-radius: 6px;
+  }
+  
+  figcaption {
+    font-size: 0.85em;
+    color: #555;
+    text-align: center;
+    margin-top: 5px;
+  }
+  article {
+    color: black;
+}
+
+.article-page {
+    min-width: 80%;
+  
+}

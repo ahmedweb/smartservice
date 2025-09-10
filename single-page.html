@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Titre de l’article | Mon Blog</title>
+
+  
+  <link rel="stylesheet" href="basic_style_gpt.css">
+  <link rel="stylesheet" href="custom_style.css">
+  <link rel="stylesheet" href="nav_style.css">
+  <link rel="stylesheet" href="single-style.css">
+</head>
+<body>
+  <header class="nav" role="banner">
+    <div class="nav__bar container">
+      <div class="brand" aria-label="Smart Service Mobile">
+        <div class="brand__logo" aria-hidden="true"></div>
+        <span>Smart Service <span style="color: var(--brand)">Mobile</span></span>
+      </div>
+      <nav class="nav__links" role="navigation" aria-label="Navigation principale"> 
+        <label for="toggle" class="menu-icon">☰</label>
+        <input type="checkbox" id="toggle">
+    
+        <div class="menu">
+            <a href="index.html#reparons">Nous réparons</a>
+            <a href="index.html#achetons">Nous achetons</a>
+            <a href="index.html#vendons">Nous vendons</a>
+            <a class="btn-primary" href="index.html#rendezvous">Prendre rendez-vous</a>
+            <a href="index.html#contact">Contact</a>
+        </div>
+    </nav>
+    
+
+    </div>
+  </header>
+
+  <!-- Contenu principal -->
+  <main class="article-page">
+    <article>
+      <header class="article-header">
+        <h1>Titre de l’article</h1>
+        <p class="meta">Publié le <time datetime="2025-09-10">10 septembre 2025</time></p>
+      </header>
+
+      <figure>
+        <img src="images/article1.jpg" alt="Illustration de l’article">
+        <figcaption>Légende de l’image</figcaption>
+      </figure>
+
+      <section class="article-content">
+        <p>
+          Voici le contenu principal de l’article. Tu peux rédiger ici ton texte en HTML, ou bien si tu génères tes articles depuis du **Markdown**, tu viendras injecter le HTML converti ici.
+        </p>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque facilisis, sapien non facilisis aliquet, est erat ullamcorper nibh, in venenatis felis nunc ut erat.
+        </p>
+      </section>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 - Mon Blog. Tous droits réservés.</p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Service Mobile — Vente & Réparation</title>
+  <meta name="description" content="Smart Service Mobile — Vente, achat et réparation de smartphones et produits informatiques. Prendre rendez-vous en ligne." />
+  <style>
+    /* =========================
+       Design tokens
+    ========================= */
+    :root{--brand:#a8196f;--ink:#151414;--text:#f8f6f8;--muted:#cfc8d2;--card:#1b1a1a;--shadow:0 10px 30px rgba(0,0,0,.35);--radius:18px;--hgap:clamp(16px,4vw,44px);}    
+
+    /* Reset */
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:100%;scroll-behavior:smooth;margin:0}
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial; color:var(--text); background:var(--ink);}
+
+    /* ---------- Background layers (image + veil + shapes + grid) ---------- */
+    .bg-root{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+    .bg-root::before{ /* image layer */
+      content:""; position:absolute; inset:0; background-image:url('https://images.openai.com/thumbnails/url/LZqLE3icu1mSUVJSUGylr5-al1xUWVCSmqJbkpRnoJdeXJJYkpmsl5yfq5-Zm5ieWmxfaAuUsXL0S7F0Tw5K889ydsrw8zf0Mo2qKgwKciwoSC0McvM3SDSOD04Njy_OT7YM9Koq9CooLc9zrwxKTUrzsjQzdM6zDFQrBgAg5yoQ');
+      background-size:cover; background-position:center; background-attachment:fixed; transform: scale(1.02); filter: saturate(.95) contrast(.9);
+    }
+    .bg-veil{position:absolute; inset:0; background: linear-gradient(rgba(0,0,0,.58), rgba(0,0,0,.54)); z-index:1; opacity:0; animation:veilFade .9s ease forwards .2s}
+
+    .parallax{position:absolute; inset:-6vh -8vw; z-index:2; pointer-events:none; perspective:1000px}
+    .shape{position:absolute; mix-blend-mode:screen; opacity:.65; filter:blur(.6px)}
+    .shape--circle{width:clamp(140px,22vw,420px); height:clamp(140px,22vw,420px); border-radius:50%; background:radial-gradient(closest-side, rgba(168,25,111,.45), rgba(168,25,111,0) 70%); animation:float 18s ease-in-out infinite}
+    .shape--diamond{width:clamp(180px,20vw,360px); height:clamp(180px,20vw,360px); background:conic-gradient(from 120deg, rgba(255,255,255,.06), rgba(255,255,255,0) 55%); transform:rotate(45deg); border:2px solid rgba(255,255,255,.08); animation:twirl 24s linear infinite}
+    .shape--triangle{width:clamp(160px,18vw,380px); height:clamp(160px,18vw,380px); background:linear-gradient(140deg, rgba(168,25,111,.18), transparent 70%); clip-path:polygon(50% 0%,0% 100%,100% 100%); animation:float 26s ease-in-out infinite reverse}
+
+    .grid-overlay{position:absolute; inset:0; z-index:3; pointer-events:none; opacity:.06; background-image: linear-gradient(90deg, #fff 1px, transparent 1px), linear-gradient(#fff 1px, transparent 1px); background-size: 80px 80px, 80px 80px;}
+
+    @keyframes float{0%,100%{transform:translateY(-8px)}50%{transform:translateY(8px)}}
+    @keyframes twirl{to{transform:rotate(405deg)}}
+    @keyframes veilFade{to{opacity:1}}
+
+    /* ---------- Content (on top of bg) ---------- */
+    .site{position:relative; z-index:4}
+    .container{width:min(1120px,92vw); margin:0 auto}
+
+    /* ---------- Nav ---------- */
+    .nav{position:sticky; top:0; z-index:50; backdrop-filter: blur(8px); background: linear-gradient(180deg, rgba(0,0,0,.36), rgba(0,0,0,.2)); border-bottom:1px solid rgba(255,255,255,.04)}
+    .nav__bar{display:flex; align-items:center; gap:14px; padding:12px var(--hgap)}
+    .brand{display:flex; align-items:center; gap:12px; font-weight:800}
+    .brand__logo{width:32px; height:32px; border-radius:8px; background:conic-gradient(from 10deg,var(--brand),#ff3ea6 30%,var(--brand) 60%); box-shadow:0 8px 22px rgba(168,25,111,.18) inset, 0 6px 18px rgba(168,25,111,.25)}
+
+    .nav__links{margin-left:auto; display:flex; gap:8px; align-items:center}
+    .nav__links a{padding:10px 14px; border-radius:999px; font-weight:700; font-size:14px; border:1px solid rgba(255,255,255,.06); background:rgba(255,255,255,.03); transition:transform .18s ease, background .18s ease}
+    .nav__links a:hover{transform:translateY(-2px); background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.18)}
+    .btn-primary{background:linear-gradient(135deg,var(--brand),#7c124f); color:white; border:none}
+
+    .menu-toggle{display:none; background:transparent; border:1px solid rgba(255,255,255,.06); color:var(--text); padding:10px 12px; border-radius:10px; font-weight:800}
+
+    @media (max-width:900px){
+      .nav__links{display:none; position:absolute; right:var(--hgap); top:72px; flex-direction:column; background:rgba(0,0,0,.78); padding:10px; gap:8px; border-radius:12px; width:calc(100% - 2*var(--hgap)); max-width:320px}
+      .nav__links.open{display:flex}
+      .menu-toggle{display:inline-flex}
+    }
+
+    /* ---------- Hero ---------- */
+    section{position:relative; padding:clamp(64px,10vh,120px) 0}
+    .eyebrow{color:var(--muted); font-weight:800; letter-spacing:.12em; text-transform:uppercase; font-size:12px}
+    .headline{font-size:clamp(28px,5vw,56px); font-weight:900; line-height:1.03}
+    .lead{color:#efecf1; max-width:70ch; font-size:clamp(15px,1.8vw,18px)}
+
+    .hero{min-height:78vh; display:grid; place-items:center; text-align:center}
+    .hero .actions{display:flex; gap:12px; justify-content:center; margin-top:18px; flex-wrap:wrap}
+    .chip{padding:10px 14px; border-radius:999px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.03); font-weight:700}
+
+    /* ---------- Cards ---------- */
+    .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px}
+    .card{background:linear-gradient(180deg,var(--card),rgba(27,26,26,.6)); border:1px solid rgba(255,255,255,.04); border-radius:var(--radius); padding:18px; box-shadow:0 8px 22px rgba(0,0,0,.36); transform:translateY(8px); opacity:0; transition:transform .6s cubic-bezier(.2,.8,.2,1), opacity .6s}
+    .card.in-view{transform:translateY(0); opacity:1}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;background:rgba(168,25,111,.14); border:1px solid rgba(168,25,111,.28)}
+
+    /* ---------- Feature & Forms ---------- */
+    .feature{display:grid; grid-template-columns:1.2fr 1fr; gap:28px; align-items:center}
+    .feature__panel{background:linear-gradient(180deg, rgba(168,25,111,.08), rgba(168,25,111,.02)); border:1px solid rgba(168,25,111,.2); border-radius:var(--radius); padding:22px; position:relative; overflow:hidden; min-height:220px}
+    .fx-stripes{position:absolute; inset:-20%; background:repeating-linear-gradient(135deg, rgba(255,255,255,.05) 0 16px, rgba(255,255,255,0) 16px 32px); transform:translateY(0); animation:pan 18s linear infinite}
+    @keyframes pan{to{transform:translateY(-30%)}}
+
+    form{display:grid; gap:12px}
+    .grid-2{display:grid; grid-template-columns:repeat(2,1fr); gap:12px}
+    input,select,textarea,button{background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.12); color:var(--text); border-radius:12px; padding:12px 14px; font:inherit}
+    button{cursor:pointer; font-weight:800}
+    .btn-ghost{background:transparent; border-color:rgba(255,255,255,.22)}
+
+    /* ---------- Footer ---------- */
+    footer{padding:40px 0;color:#bfb6c1;font-size:14px;text-align:center}
+
+    /* ---------- Responsive tweaks ---------- */
+    @media (max-width:900px){
+      .feature{grid-template-columns:1fr}
+      .grid-2{grid-template-columns:1fr}
+      .nav__bar{padding:10px 16px}
+      .hero{padding-top:14vh}
+    }
+
+    @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <!-- Background composite (image + veil + shapes + grid) -->
+  <div class="bg-root" aria-hidden="true">
+    <div class="bg-veil" aria-hidden="true"></div>
+    <div class="parallax" aria-hidden="true">
+      <div class="shape shape--circle" data-depth="0.05" style="top:5%; left:6%"></div>
+      <div class="shape shape--diamond" data-depth="0.12" style="top:62%; left:4%"></div>
+      <div class="shape shape--triangle" data-depth="0.09" style="top:20%; right:8%"></div>
+      <div class="shape shape--circle" data-depth="0.16" style="bottom:-4%; right:-2%"></div>
+    </div>
+    <div class="grid-overlay" aria-hidden="true"></div>
+  </div>
+
+  <div class="site">
+    <!-- Navigation -->
+    <header class="nav" role="banner">
+      <div class="nav__bar container">
+        <div class="brand" aria-label="Smart Service Mobile">
+          <div class="brand__logo" aria-hidden="true"></div>
+          <span>Smart Service <span style="color:var(--brand)">Mobile</span></span>
+        </div>
+
+        <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav">☰ Menu</button>
+
+        <nav id="main-nav" class="nav__links" role="navigation" aria-label="Navigation principale">
+          <a href="#reparons">Nous réparons</a>
+          <a href="#achetons">Nous achetons</a>
+          <a href="#vendons">Nous vendons</a>
+          <a class="btn-primary" href="#rendezvous">Prendre rendez-vous</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero" id="accueil" aria-label="Accueil">
+      <div class="container">
+        <p class="eyebrow">Vente • Achat • Réparation</p>
+        <h1 class="headline">Votre tech, <span style="background:linear-gradient(90deg,#fff,var(--brand));-webkit-background-clip:text;background-clip:text;color:transparent">comme neuve</span></h1>
+        <p class="lead">Smart Service Mobile propose la réparation rapide de smartphones et ordinateurs, le remplacement de batterie, le formatage/installation de systèmes (Windows, macOS, Android), la récupération de données, et la vente/achat de matériel.</p>
+        <div class="actions">
+          <a class="chip" href="#reparons">Voir nos réparations</a>
+          <a class="chip" href="#rendezvous">Réserver une intervention</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Nous réparons -->
+    <section id="reparons" aria-labelledby="rep-title">
+      <div class="container">
+        <div>
+          <div class="eyebrow">Notre atelier</div>
+          <h2 id="rep-title" class="headline">Nous réparons</h2>
+          <p class="lead">Diagnostic honnête, pièces de qualité, garantie claire. Voici nos prestations phares :</p>
+        </div>
+        <div class="cards">
+          <article class="card"><span class="badge">Smartphone</span><h3>Réparation écran</h3><p>Dalles fissurées, tactile HS, modules OLED/LCD.</p></article>
+          <article class="card"><span class="badge">Batterie</span><h3>Remplacement de batterie</h3><p>Capacité fatiguée, gonflement, extinction subite.</p></article>
+          <article class="card"><span class="badge">Système</span><h3>Formatage de OS</h3><p>Réinstallation propre (Windows/macOS), optimisation et mises à jour.</p></article>
+          <article class="card"><span class="badge">Données</span><h3>Récupération de données</h3><p>Fichiers supprimés, disques faibles, transfert vers nouveau device.</p></article>
+          <article class="card"><span class="badge">Connectique</span><h3>Port de charge</h3><p>Remplacement, nettoyage, soudure fine si nécessaire.</p></article>
+          <article class="card"><span class="badge">Liquide</span><h3>Désoxydation</h3><p>Intervention après contact avec l'eau, nettoyage pro, tests.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Nous achetons -->
+    <section id="achetons" aria-labelledby="buy-title">
+      <div class="container feature">
+        <div>
+          <div class="eyebrow">Reprise cash</div>
+          <h2 id="buy-title" class="headline">Nous achetons</h2>
+          <p class="lead">Nous reprenons vos smartphones, laptops et accessoires en bon état (ou à réparer) — estimation transparente et paiement rapide.</p>
+          <ul>
+            <li>Reprise après diagnostic express</li>
+            <li>Effacement sécurisé des données</li>
+            <li>Valorisation éco-responsable du matériel</li>
+          </ul>
+        </div>
+        <div class="feature__panel">
+          <div class="fx-stripes" aria-hidden="true"></div>
+          <h3>Demander une estimation</h3>
+          <form id="form-achat">
+            <div class="grid-2">
+              <input required name="modele" placeholder="Modèle (ex: iPhone 13, Lenovo ThinkPad)" />
+              <select name="etat" required>
+                <option value="" disabled selected>État du produit</option>
+                <option>Très bon</option>
+                <option>Bon</option>
+                <option>À réparer</option>
+              </select>
+            </div>
+            <textarea name="details" placeholder="Détails (stockage, année, panne, accessoires)"></textarea>
+            <div class="grid-2">
+              <input type="tel" name="tel" placeholder="Téléphone" required />
+              <input type="email" name="email" placeholder="Email (optionnel)" />
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn-primary" type="submit">Envoyer la demande</button>
+              <button class="btn-ghost" type="reset">Réinitialiser</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Nous vendons -->
+    <section id="vendons" aria-labelledby="sell-title">
+      <div class="container">
+        <div>
+          <div class="eyebrow">Reconditionné & Neuf</div>
+          <h2 id="sell-title" class="headline">Nous vendons</h2>
+          <p class="lead">Smartphones reconditionnés testés, ordinateurs prêts à l'emploi, accessoires utiles — le tout garanti.</p>
+        </div>
+        <div class="cards">
+          <article class="card"><span class="badge">Smartphones</span><h3>Reconditionné vérifié</h3><p>Contrôle qualité, batterie saine, 12 mois de sérénité.</p></article>
+          <article class="card"><span class="badge">Informatique</span><h3>Laptops & PC prêts</h3><p>Configurations pour bureau, études, ou gaming léger.</p></article>
+          <article class="card"><span class="badge">Accessoires</span><h3>Chargeurs & câbles</h3><p>USB‑C, Lightning, MagSafe, adaptateurs certifiés.</p></article>
+          <article class="card"><span class="badge">Services+</span><h3>Mise en route</h3><p>Transfert de données, comptes, messageries et sauvegardes.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prendre rendez-vous -->
+    <section id="rendezvous" aria-labelledby="rdv-title">
+      <div class="container feature">
+        <div>
+          <div class="eyebrow">Atelier sur rendez-vous</div>
+          <h2 id="rdv-title" class="headline">Prendre rendez-vous</h2>
+          <p class="lead">Choisissez le service, la date et laissez-nous vos coordonnées. Nous confirmons par SMS.</p>
+          <ul>
+            <li>Réparation smartphone (écran, batterie, port, etc.)</li>
+            <li>Formatage / réinstallation OS</li>
+            <li>Diagnostic & nettoyage interne</li>
+          </ul>
+        </div>
+        <div class="feature__panel">
+          <div class="fx-stripes" aria-hidden="true"></div>
+          <form id="form-rdv" aria-label="Formulaire de prise de rendez-vous">
+            <div class="grid-2">
+              <select name="service" required>
+                <option value="" disabled selected>Service souhaité</option>
+                <option>Réparation smartphone</option>
+                <option>Remplacement de batterie</option>
+                <option>Formatage / réinstallation OS</option>
+                <option>Diagnostic & nettoyage</option>
+                <option>Autre (préciser)</option>
+              </select>
+              <input name="modele" placeholder="Modèle / Référence" required />
+            </div>
+            <div class="grid-2">
+              <input type="date" name="date" required />
+              <input type="time" name="time" required />
+            </div>
+            <div class="grid-2">
+              <input type="text" name="nom" placeholder="Nom" required />
+              <input type="tel" name="tel" placeholder="Téléphone" required />
+            </div>
+            <textarea name="notes" placeholder="Décrivez la panne / besoin (optionnel)"></textarea>
+            <button class="btn-primary" type="submit">Confirmer la demande</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" aria-labelledby="contact-title">
+      <div class="container">
+        <div>
+          <div class="eyebrow">Restons en contact</div>
+          <h2 id="contact-title" class="headline">Contact</h2>
+          <p class="lead">Une question rapide ? Besoin d'un conseil avant d'acheter ou de réparer ? Écrivez-nous.</p>
+        </div>
+        <div class="feature">
+          <div class="feature__panel" style="min-height:220px;">
+            <div class="fx-stripes" aria-hidden="true"></div>
+            <h3>Nos coordonnées</h3>
+            <p><strong>Téléphone:</strong> <a href="tel:+212000000000">+212 00 00 00 00</a></p>
+            <p><strong>Email:</strong> <a href="mailto:contact@smartservicemobile.com">contact@smartservicemobile.com</a></p>
+            <p><strong>Horaires:</strong> Lun–Sam · 10:00–18:30</p>
+          </div>
+          <div class="feature__panel">
+            <h3>Écrire un message</h3>
+            <form id="form-contact">
+              <div class="grid-2">
+                <input name="nom" placeholder="Nom" required />
+                <input type="email" name="email" placeholder="Email" required />
+              </div>
+              <textarea name="message" placeholder="Votre message" required></textarea>
+              <button class="btn-primary" type="submit">Envoyer</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <p>© <span id="year"></span> Smart Service Mobile · Design & Code by AMD</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // mobile menu
+    const toggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav__links');
+    toggle.addEventListener('click', () => {
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+      navLinks.classList.toggle('open');
+    });
+
+    // parallax movement for shapes
+    const shapes = Array.from(document.querySelectorAll('.parallax .shape'));
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function onScroll(){ if(reduceMotion) return; const y = window.scrollY; shapes.forEach(el=>{ const d = parseFloat(el.dataset.depth||'0.08'); el.style.transform = `translate3d(0, ${y * d}px, 0)`; }); }
+    document.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+    // reveal cards
+    const io = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in-view'); }); }, {threshold:0.16});
+    document.querySelectorAll('.card').forEach(c=>io.observe(c));
+
+    // simple form handlers (placeholders)
+    function toast(msg){ const el=document.createElement('div'); el.textContent=msg; el.style.position='fixed'; el.style.bottom='22px'; el.style.left='50%'; el.style.transform='translateX(-50%)'; el.style.padding='12px 16px'; el.style.fontWeight='800'; el.style.borderRadius='999px'; el.style.background='linear-gradient(135deg,var(--brand),#7c124f)'; el.style.boxShadow='0 8px 22px rgba(0,0,0,.38)'; el.style.zIndex='9999'; document.body.appendChild(el); setTimeout(()=>el.remove(), 2600); }
+    function handleForm(id, text){ const f = document.getElementById(id); if(!f) return; f.addEventListener('submit', e=>{ e.preventDefault(); f.reset(); toast(text); }); }
+    handleForm('form-achat','Demande envoyée ✅ Nous reviendrons vers vous rapidement.');
+    handleForm('form-rdv','Rendez-vous demandé ✅ Confirmation par SMS.');
+    handleForm('form-contact','Message bien reçu ✅');
+  </script>
+</body>
+</html>

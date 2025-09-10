@@ -1,0 +1,62 @@
+/* Style global du menu */
+.nav__links { 
+    padding: 10px;
+    position: relative;
+  }
+  
+  /* Liens en mode bureau */
+  .nav__links .menu a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    font-weight: bold;
+  }
+  
+  /* Icône hamburger */
+  .menu-icon {
+    font-size: 28px;
+    color: white;
+    cursor: pointer;
+    display: none; /* caché sur PC */
+  }
+  
+  /* Cache la checkbox */
+  #toggle {
+    display: none;
+  }
+  
+  /* ----------- Responsive ----------- */
+  @media (max-width: 768px) {
+    /* Par défaut le menu est caché sur petit écran */
+    .nav__links .menu {
+      display: none;
+      flex-direction: column;
+      background: #000;
+      position: absolute;
+      top: 50px; /* sous le header */
+      left: 0;
+      width: 100%;
+      padding: 15px 0;
+    }
+  
+    /* Afficher le hamburger */
+    .menu-icon {
+      display: block;
+    }
+  
+    /* Quand toggle est activé → afficher le menu */
+    #toggle:checked ~ .menu {
+      display: flex;
+    }
+  
+    /* Liens en colonne */
+    .nav__links .menu a {
+      margin: 10px 0;
+      text-align: center;
+      display: block;
+    }
+  }
+  .nav {
+    position: fixed;
+    width: 100%;
+  }
