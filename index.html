@@ -211,7 +211,49 @@
               <button type="submit">Send</button>
             </p>
           </form>
-     -->  <form name="contact" method="POST" action="merci.html" data-netlify="true">
+     -->  
+     
+     <form id="contact-form"
+     action="https://docs.google.com/forms/u/1/d/12mI-fM4thpDGAsGZ-icV6mxE55A-gXaZOBQ8dlwsPh4/formResponse"
+     method="POST" target="hidden_iframe">
+ <!-- input hidden: si tu veux collecter via Google Forms seul, garder form-name non nécessaire -->
+ <!-- Champs : utiliser exactement les names entry.xxx fournis par Google Forms -->
+ <label>
+   Nom
+   <input type="text" name="entry.1872895581" required>
+ </label>
+
+ <label>
+   Email
+   <input type="email" name="entry.1111084716" required>
+ </label>
+
+ <label>
+   Message
+   <textarea name="entry.1453249487" rows="6" required></textarea>
+ </label>
+
+ <!-- Honeypot anti-bot (optionnel, pas connecté à Google) -->
+ <div style="display:none;">
+   <label>Ne pas remplir<input name="honeypot" autocomplete="off"></label>
+ </div>
+
+ <button type="submit" class="btn-primary">Envoyer</button>
+ <p id="form-status" aria-live="polite"></p>
+</form>
+
+<!-- iframe cachée utilisé pour la soumission "non-AJAX" et détection du onload -->
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+<p>
+ Remarque : si Javascript est activé, nous ferons un envoi AJAX ; sinon, le formulaire sera envoyé via POST classique à Google Forms.
+</p>
+
+     
+     
+     
+     
+     <form name="contact" method="POST" action="merci.html" data-netlify="true">
            <input type="hidden" name="form-name" value="contact">
 
          <div class="grid-2">
@@ -231,6 +273,9 @@
       <p>© <span id="year"></span> Smart Service Mobile · Design & Codyiuivu e by AMD</p>
     </div>
   </footer>
+
+  
+  <script src="js/google-form.js"></script>
 
   <script>
     // ========= Parallax on scroll =========
